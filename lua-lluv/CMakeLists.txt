@@ -4,7 +4,7 @@ PROJECT("lua-lluv")
 
 INCLUDE(ExternalProject)
 
-SET(VERSION_EXTERNAL "0.1.9")
+SET(VERSION_EXTERNAL "0.1.10")
 SET(VERSION_PACKAGE  "1")
 SET(PROJECT_VERSION  "${VERSION_EXTERNAL}.${VERSION_PACKAGE}")
 
@@ -46,8 +46,8 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	ExternalProject_Add(TARGET_lua_lluv
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/lua-lluv-${VERSION_EXTERNAL}.tar.gz
-	                    URL_HASH SHA1=f8a46b6cbfce70ef6b3918077a5a15f3e79ad33a
-	                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}/src/TARGET_lua_lluv --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1 --copy-folder ${CMAKE_CURRENT_SOURCE_DIR}/copy
+	                    URL_HASH SHA1=31a297bb76b04000db978cdd485c79bc543ce4db
+	                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}/src/TARGET_lua_lluv --copy-folder ${CMAKE_CURRENT_SOURCE_DIR}/copy
 	                    CMAKE_ARGS ${SUB_CMAKE_ARGS}
 	                    INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install
 	)
@@ -66,7 +66,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	INCLUDE(CPack)
 
 	# This is the folder where the external project TARGET_bitop installed the files.
-	SET(SUB_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install/lib/lua")
+	SET(SUB_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/install")
 
 	IF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
 		# Package a windows build.
@@ -81,19 +81,10 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 		               @ONLY)
 	ENDIF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
 
-#	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq${CMAKE_SHARED_MODULE_SUFFIX}
-#	        DESTINATION lua_plugins/)
-#	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/timer${CMAKE_SHARED_MODULE_SUFFIX}
-#	        DESTINATION lua_plugins/lzmq/)
-#
-#	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/ffi.lua ${SUB_INSTALL_DIR}/lzmq/loop.lua ${SUB_INSTALL_DIR}/lzmq/poller.lua ${SUB_INSTALL_DIR}/lzmq/threads.lua
-#	        DESTINATION lua/lzmq/)
-#	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/ffi/api.lua ${SUB_INSTALL_DIR}/lzmq/ffi/error.lua ${SUB_INSTALL_DIR}/lzmq/ffi/loop.lua ${SUB_INSTALL_DIR}/lzmq/ffi/poller.lua ${SUB_INSTALL_DIR}/lzmq/ffi/threads.lua ${SUB_INSTALL_DIR}/lzmq/ffi/timer.lua
-#	        DESTINATION lua/lzmq/ffi/)
-#	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/impl/loop.lua ${SUB_INSTALL_DIR}/lzmq/impl/threads.lua
-#	        DESTINATION lua/lzmq/impl/)
-#	INSTALL(FILES ${SUB_INSTALL_DIR}/lzmq/llthreads/ex.lua
-#	        DESTINATION lua/lzmq/llthreads/)
+	INSTALL(FILES ${SUB_INSTALL_DIR}/lua_plugins/lluv${CMAKE_SHARED_MODULE_SUFFIX}
+	        DESTINATION lua_plugins/)
+	INSTALL(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}/src/TARGET_lua_lluv/src/lua
+	        DESTINATION lua/)
 
 	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
 	        DESTINATION .)
