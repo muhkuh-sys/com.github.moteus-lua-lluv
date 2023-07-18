@@ -1,9 +1,8 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python3
 
 from jonchki import cli_args
 from jonchki import install
 from jonchki import jonchkihere
-from jonchki import vcs_id
 
 import glob
 import os
@@ -36,7 +35,7 @@ strCfg_jonchkiHerePath = os.path.join(
     'jonchki'
 )
 # This is the Jonchki version to use.
-strCfg_jonchkiVersion = '0.0.7.1'
+strCfg_jonchkiVersion = '0.0.11.1'
 # Look in this folder for Jonchki archives before downloading them.
 strCfg_jonchkiLocalArchives = os.path.join(
     strCfg_projectFolder,
@@ -197,16 +196,9 @@ strJonchki = jonchkihere.install(
     LOCAL_ARCHIVES=strCfg_jonchkiLocalArchives
 )
 
-# Try to get the VCS ID.
-strProjectVersionVcs, strProjectVersionVcsLong = vcs_id.get(
-    strCfg_projectFolder
-)
-print(strProjectVersionVcs, strProjectVersionVcsLong)
-
-
 # ---------------------------------------------------------------------------
 #
-# Get the build requirements for LUA5.4.
+# Get the build requirements for LUA5.4 and the externals.
 #
 strCwd = os.path.join(strCfg_workingFolder, 'lua5.4', 'build_requirements')
 for strMatch in glob.iglob(os.path.join(strCwd, 'lua5.4-lua-lluv-*.xml')):
@@ -216,6 +208,7 @@ astrCmd = [
     'cmake',
     '-DCMAKE_INSTALL_PREFIX=""',
     '-DPRJ_DIR=%s' % strCfg_projectFolder,
+    '-DWORKING_DIR=%s' % strCfg_workingFolder,
     '-DBUILDCFG_ONLY_JONCHKI_CFG="ON"',
     '-DBUILDCFG_LUA_USE_SYSTEM="OFF"',
     '-DBUILDCFG_LUA_VERSION="5.4"'
@@ -235,7 +228,19 @@ astrCmd = [
     'install-dependencies',
     '--verbose', strCfg_jonchkiVerbose,
     '--syscfg', strCfg_jonchkiSystemConfiguration,
-    '--prjcfg', strCfg_jonchkiProjectConfiguration
+    '--prjcfg', strCfg_jonchkiProjectConfiguration,
+
+    '--logfile', os.path.join(
+        strCfg_workingFolder,
+        'lua5.4',
+        'build_requirements',
+        'jonchki.log'
+    ),
+
+    '--dependency-log', os.path.join(
+        strCfg_projectFolder,
+        'dependency-log.xml'
+    )
 ]
 astrCmd.extend(astrJONCHKI_SYSTEM)
 astrCmd.append('--build-dependencies')
@@ -250,6 +255,7 @@ astrCmd = [
     'cmake',
     '-DCMAKE_INSTALL_PREFIX=""',
     '-DPRJ_DIR=%s' % strCfg_projectFolder,
+    '-DWORKING_DIR=%s' % strCfg_workingFolder,
     '-DBUILDCFG_LUA_USE_SYSTEM="OFF"',
     '-DBUILDCFG_LUA_VERSION="5.4"'
 ]
