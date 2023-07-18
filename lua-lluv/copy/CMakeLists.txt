@@ -2,9 +2,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 
 PROJECT("org.luajit-bitop")
 
-ENABLE_TESTING()
-FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
-
 SET(INSTALL_DIR_LUA_MODULES "lua_plugins")
 
 # TODO: no absolute paths here.
@@ -43,11 +40,7 @@ SET(SOURCES
 )
 
 
-IF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	SET(LLUV_LIBS ${LIBUV_LIBRARIES} iphlpapi kernel32 psapi userenv ws2_32)
-ELSE(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	SET(LLUV_LIBS ${LIBUV_LIBRARIES} pthread)
-ENDIF(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+SET(LLUV_LIBS ${LIBUV_LIBRARIES} pthread)
 
 # Build the Lua module.
 ADD_LIBRARY(TARGET_lluv MODULE
@@ -74,10 +67,3 @@ INSTALL(TARGETS TARGET_lluv
         ARCHIVE DESTINATION lib
         RUNTIME DESTINATION bin
         INCLUDES DESTINATION include)
-
-# Add tests for this module.
-IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
-	# Here are the MinGW specific tests.
-	ADD_TEST(NAME lluv_MinGW_DLL_dependencies
-	         COMMAND "${PYTHON_EXECUTABLE}" ${TEST_SCRIPT_FOLDER}/mingw_dll_dependencies.py -u lua5.1 -u lua5.2 -u lua5.3 $<TARGET_FILE:TARGET_lluv>)
-ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
