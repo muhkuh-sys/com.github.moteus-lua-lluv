@@ -26,8 +26,13 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# Select the LUA version.
 	INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/muhkuh_lua.cmake)
 
-	# Python is used for the hashes and the test scripts.
-	FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
+	IF(CMAKE_VERSION VERSION_LESS 3.12.0)
+		FIND_PACKAGE(PythonInterp 3.5 REQUIRED)
+		SET(PYTHON_EXE "${PYTHON_EXECUTABLE}")
+	ELSE(CMAKE_VERSION VERSION_LESS 3.12.0)
+		FIND_PACKAGE(Python3 REQUIRED)
+		SET(PYTHON_EXE "${Python3_EXECUTABLE}")
+	ENDIF(CMAKE_VERSION VERSION_LESS 3.12.0)
 
 	SET(SUB_CMAKE_ARGS "")
 	LIST(APPEND SUB_CMAKE_ARGS "-DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
@@ -95,8 +100,8 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	ADD_CUSTOM_TARGET(pack
 	                  COMMAND ${CMAKE_MAKE_PROGRAM}
 	                  COMMAND ${CMAKE_MAKE_PROGRAM} package
-	                  COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lua-lluv-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
-	                  COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lua-lluv-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.tar.xz
+	                  COMMAND "${PYTHON_EXE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lua-lluv-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.xml
+	                  COMMAND "${PYTHON_EXE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/generate_hash.py ${CPACK_OUTPUT_FILE_PREFIX}/lua${BUILDCFG_LUA_VERSION}-lua-lluv-${PROJECT_VERSION}-${JONCHKI_PLATFORM}.tar.xz
 	                  COMMENT "Pack the artifact and generate the hashes...")
 
 
