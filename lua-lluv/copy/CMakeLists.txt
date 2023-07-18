@@ -1,14 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 
-PROJECT("org.luajit-bitop")
+PROJECT("com.github.moteus-lua-lluv")
 
 SET(INSTALL_DIR_LUA_MODULES "lua_plugins")
-
-# TODO: no absolute paths here.
-#SET(LUA_INCLUDE_DIR /home/baccy/workspace/lua_lluv_experiments/jonchki_lua/dev/include/lua5.1)
-#SET(LUA_LIBRARIES /home/baccy/workspace/lua_lluv_experiments/jonchki_lua/lua5.1.so)
-#SET(LIBUV_INCLUDE_DIR /home/baccy/workspace/lua_lluv_experiments/libuv/libuv-1.22.0/build/install/usr/local/include)
-#SET(LIBUV_LIBRARIES /home/baccy/workspace/lua_lluv_experiments/libuv/libuv-1.22.0/build/install/usr/local/lib/libuv_a.a -pthread)
 
 SET(SOURCES
 	src/lluv_utils.c
@@ -48,17 +42,9 @@ ADD_LIBRARY(TARGET_lluv MODULE
 TARGET_INCLUDE_DIRECTORIES(TARGET_lluv
                            PRIVATE ${LUA_INCLUDE_DIR} ${LIBUV_INCLUDE_DIR})
 TARGET_LINK_LIBRARIES(TARGET_lluv ${LLUV_LIBS})
-IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
-	TARGET_LINK_LIBRARIES(TARGET_lluv ${LUA_LIBRARIES})
-ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
 
 # Set the name of the output file to "lluv".
 SET_TARGET_PROPERTIES(TARGET_lluv PROPERTIES PREFIX "" OUTPUT_NAME "lluv")
-
-# On mingw link all compiler libraries static.
-IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
-	SET_PROPERTY(TARGET TARGET_lluv PROPERTY LINK_FLAGS "-static -static-libgcc -static-libstdc++")
-ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
 
 # Install the lua module.
 INSTALL(TARGETS TARGET_lluv
