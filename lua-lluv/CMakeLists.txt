@@ -52,7 +52,7 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	                    PREFIX ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}
 	                    URL ${CMAKE_CURRENT_SOURCE_DIR}/lua-lluv-${VERSION_EXTERNAL}.tar.gz
 	                    URL_HASH SHA1=31a297bb76b04000db978cdd485c79bc543ce4db
-	                    PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}/src/TARGET_lua_lluv --copy-folder ${CMAKE_CURRENT_SOURCE_DIR}/copy
+	                    PATCH_COMMAND "${PYTHON_EXE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/lua-lluv-${VERSION_EXTERNAL}/src/TARGET_lua_lluv --copy-folder ${CMAKE_CURRENT_SOURCE_DIR}/copy
 	                    CMAKE_ARGS ${SUB_CMAKE_ARGS}
 	                    INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install
 	)
